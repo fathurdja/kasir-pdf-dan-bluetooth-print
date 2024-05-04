@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kasir_app/models/mysql.dart';
+import 'package:kasir_app/models/product.dart';
+import 'package:mysql1/mysql1.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct(this.addNew);
@@ -8,6 +11,19 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
+  Product newProduct = Product(
+    noBukti:
+        '', // Tidak perlu memasukkan NOBUKTI karena akan di-generate otomatis
+    tglpu: DateTime.now().toString(),
+    tyunit: '',
+    barcode: '',
+    jml: 0,
+    harga: 100.0,
+    cmodule: 'RM12',
+    userup: 'adminbrg',
+  );
+  List _data = [];
+  var db = Mysql();
   final List<String> namaProduk = [
     "Boneva Galon (isi)",
     "Boneva Galon + isi",
@@ -29,19 +45,28 @@ class _AddProductState extends State<AddProduct> {
   }
 
   void saveNewOrder() {
-    final namaProduk = namaProdukc;
-    final jumlahProduk = int.tryParse(jumlahProdukc.text);
-    final hargaProduk = hargaProdukc.text;
     final customer = customerC.text;
-    if (namaProduk == null ||
-        jumlahProduk == null ||
-        jumlahProduk <= 0 ||
-        hargaProduk.isEmpty ||
-        customer.isEmpty) {
+    if (namaProdukc == null || jumlahProdukc.text.isEmpty || customer.isEmpty) {
       return;
     }
-    widget.addNew(
-        namaProduk, double.parse(hargaProduk), jumlahProduk, customer);
+    final int? jumlahProduk = int.tryParse(jumlahProdukc.text);
+    final double hargaProduk = double.tryParse(hargaProdukc.text) ?? 0.0;
+    if (jumlahProduk == null || jumlahProduk <= 0) {
+      return;
+    }
+    setState(() {
+      newProduct = Product(
+        noBukti: '', // NoBukti akan di-generate secara otomatis
+        tglpu: DateTime.now().toString(),
+        tyunit: namaProdukc!,
+        barcode: '',
+        jml: jumlahProduk,
+        harga: hargaProduk,
+        cmodule: 'RM12',
+        userup: 'adminbrg',
+      );
+    });
+    widget.addNew(newProduct);
     Navigator.of(context).pop();
   }
 
@@ -93,7 +118,10 @@ class _AddProductState extends State<AddProduct> {
               height: 10,
             ),
             TextButton(
-              onPressed: saveNewOrder,
+              onPressed: () async {
+                saveNewOrder();
+                await addDataDaily(newProduct);
+              },
               child: const Text(
                 "add",
                 style: TextStyle(fontSize: 20),
@@ -103,5 +131,25 @@ class _AddProductState extends State<AddProduct> {
         ),
       ),
     );
+  }
+
+  Future<void> addDataDaily(Product product) async {
+    try {
+      List<List<dynamic>> results = await db.getConnection().then((conn) async {
+        String orderNumber = Order.generateOrderNumber();
+        String sql =
+            "INSERT INTO unitpudtl (NOBUKTI, tglpu, tyunit, barcode, jml, harga, cmodule, userup) VALUES ($orderNumber,${product.tglpu},${product.tyunit},${product.barcode},${product.jml},${product.harga},${product.cmodule},${product.userup})";
+        var queryResults = await conn.query(sql);
+        List<List<dynamic>> resultList = queryResults.toList();
+        conn.close();
+        return resultList;
+      });
+
+      setState(() {
+        _data = results;
+      });
+    } catch (error) {
+      print('Error adding product: $error');
+    }
   }
 }

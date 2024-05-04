@@ -95,20 +95,25 @@ class WellcomePage extends StatelessWidget {
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return AlertDialog(
-                                  title: const Text("Input Stock"),
-                                  content: Container(
-                                    height: 300,
-                                    width: 800,
-                                    child: const Column(
-                                      children: [
-                                        Text("data"),
-                                        TextField(),
-                                        Text("data"),
-                                        TextField(),
-                                        Text("data"),
-                                        TextField(),
-                                      ],
+                                return Container(
+                                 
+                                  child: AlertDialog(
+                                    insetPadding: EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 20),
+                                    title: const Text("Input Stock"),
+                                    content: Container(
+                                      height: 300,
+                                      width: 800,
+                                      child: const Column(
+                                        children: [
+                                          Text("data"),
+                                          TextField(),
+                                          Text("data"),
+                                          TextField(),
+                                          Text("data"),
+                                          TextField(),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );

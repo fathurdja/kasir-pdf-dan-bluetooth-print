@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
+import 'package:flutter/services.dart';
 import 'package:kasir_app/models/cart.dart';
 
 // ignore: must_be_immutable
@@ -136,6 +139,10 @@ class _PrintState extends State<Print> {
                       onPressed: _connected
                           ? () async {
                               Map<String, dynamic> config = Map();
+                              config['width'] = 40; // 标签宽度，单位mm
+                              config['height'] = 70; // 标签高度，单位mm
+                              config['gap'] = 2; // 标签间隔，单位mm
+
                               List<LineText> list = [];
                               list.add(LineText(
                                   type: LineText.TYPE_TEXT,
@@ -226,6 +233,8 @@ class _PrintState extends State<Print> {
                                     linefeed: 1));
 
                                 total += totalHarga;
+
+                                break;
                               }
                               list.add(LineText(
                                   type: LineText.TYPE_TEXT,
@@ -245,19 +254,12 @@ class _PrintState extends State<Print> {
                                   // relativePos: 0,
                                   linefeed: 1));
 
-                              list.add(LineText(linefeed: 2));
-
-                              // ByteData data = await rootBundle
-                              //     .load("assets/images/bluetooth_print.png");
-                              // List<int> imageBytes = data.buffer.asUint8List(
-                              //     data.offsetInBytes, data.lengthInBytes);
-                              // String base64Image = base64Encode(imageBytes);
-                              // list.add(LineText(type: LineText.TYPE_IMAGE, content: base64Image, align: LineText.ALIGN_CENTER, linefeed: 1));
+                              list.add(LineText(linefeed: 1));
 
                               await bluetoothPrint.printReceipt(config, list);
                             }
                           : null,
-                      child: Text("Print Test"))
+                      child: Text("Print Struk"))
                 ],
               ),
             ),

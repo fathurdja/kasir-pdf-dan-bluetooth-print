@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:kasir_app/Product_page.dart';
 import 'package:kasir_app/models/cart.dart';
+import 'package:kasir_app/models/product.dart';
 import 'package:kasir_app/pages/addPage.dart';
 import 'package:kasir_app/pages/homePage.dart';
 import 'package:kasir_app/pages/invoice_page.dart';
 import 'package:kasir_app/pages/wellcome_page.dart';
 import 'package:kasir_app/print.dart';
+import 'package:kasir_app/stockReport.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +27,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Kasir",
-        home: Home(),
+        home: const Home(),
+        // home: WellcomePage(),
         routes: <String, WidgetBuilder>{
           "page1": (BuildContext context) => new Home(),
         },
@@ -78,7 +83,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: const Color(0xFF3C5B6F),
         title: const Text("ORDER"),
         actions: <Widget>[
           TextButton(
@@ -103,7 +108,10 @@ class _HomeState extends State<Home> {
                 leading: const Icon(Icons.article_outlined),
                 title: const Text("Laporan Stock"),
                 trailing: const Icon(Icons.arrow_right_sharp),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Stockpage()));
+                },
               )
             ],
           ),
@@ -115,20 +123,44 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF3C5B6F),
+                          shape: LinearBorder.start()),
                       onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => InvoicePage(_cart))),
-                      child: const Text("Download Pdf")),
+                      child: const Text(
+                        "Download Pdf",
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  SizedBox(
+                    width: 30,
+                  ),
                   ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF3C5B6F),
+                          shape: LinearBorder.start()),
                       onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => Print(carts: _cart))),
-                      child: Text("Print Struk")),
+                      child: const Text(
+                        "Print Struk",
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF3C5B6F),
+                          shape: LinearBorder.start()),
+                      onPressed: () {},
+                      child: Text(
+                        "Update Data",
+                        style: TextStyle(color: Colors.white),
+                      ))
                 ],
               ),
               homePage,
@@ -137,4 +169,6 @@ class _HomeState extends State<Home> {
           )),
     );
   }
+
+  
 }

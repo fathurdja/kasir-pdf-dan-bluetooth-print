@@ -12,7 +12,9 @@ class ProductPage extends StatelessWidget {
     return Container(
       height: 1000,
       child: carts.isEmpty
-          ? const Column(
+          ? const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "No Orders",
