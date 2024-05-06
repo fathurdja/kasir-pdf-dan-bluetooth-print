@@ -142,7 +142,7 @@ class _HomeState extends State<Home> {
                 trailing: const Icon(Icons.arrow_right_sharp),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Stockpage()));
+                      MaterialPageRoute(builder: (context) => const Stockpage()));
                 },
               )
             ],
@@ -159,7 +159,7 @@ class _HomeState extends State<Home> {
                 children: <Widget>[
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF3C5B6F),
+                          backgroundColor: const Color(0xFF3C5B6F),
                           shape: LinearBorder.start()),
                       onPressed: () => Navigator.push(
                           context,
@@ -169,12 +169,12 @@ class _HomeState extends State<Home> {
                         "Download Pdf",
                         style: TextStyle(color: Colors.white),
                       )),
-                  SizedBox(
+                  const SizedBox(
                     width: 30,
                   ),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF3C5B6F),
+                          backgroundColor: const Color(0xFF3C5B6F),
                           shape: LinearBorder.start()),
                       onPressed: () {
                         generateCSV(data);

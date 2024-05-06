@@ -7,7 +7,7 @@ import 'package:printing/printing.dart';
 
 class PdfPreviewPage extends StatelessWidget {
   final List<Invoice> invoice;
-  const PdfPreviewPage({Key? key, required this.invoice}) : super(key: key);
+  const PdfPreviewPage({super.key, required this.invoice});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ import 'package:kasir_app/pages/pdfPreview.dart';
 class InvoicePage extends StatelessWidget {
   final List<Cart> items;
 
-  InvoicePage(this.items);
+  const InvoicePage(this.items, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,17 +1,25 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:kasir_app/models/mysql.dart';
 import 'package:kasir_app/models/product.dart';
 import 'package:mysql1/mysql1.dart';
 
 class AddProduct extends StatefulWidget {
-  const AddProduct(this.addNew);
+  const AddProduct(this.addNew, {super.key});
   final Function addNew;
   @override
   State<AddProduct> createState() => _AddProductState();
 }
 
 class _AddProductState extends State<AddProduct> {
+  String? namaProdukc; // Initialize as nullable
+  final jumlahProdukc = TextEditingController();
+  final hargaProdukc = TextEditingController();
+  final customerC = TextEditingController();
   List<Map<String, dynamic>> data = [];
+  int qty = 0;
+  var db = Mysql();
   String noBukti = '';
   Product newProduct = Product(
       noBukti:
@@ -25,8 +33,7 @@ class _AddProductState extends State<AddProduct> {
       userup: 'adminbrg',
       tglup: '',
       kcabang: '001');
-  int qty = 0;
-  var db = Mysql();
+
   final List<String> namaProduk = [
     "Boneva Galon (isi)",
     "Boneva Galon + isi",
@@ -34,13 +41,9 @@ class _AddProductState extends State<AddProduct> {
     "Boneva 600 ml",
     "Boneva 1.5 ml"
   ];
-  String? namaProdukc; // Initialize as nullable
-  final jumlahProdukc = TextEditingController();
-  final hargaProdukc = TextEditingController();
-  final customerC = TextEditingController();
-  
 
   @override
+  // menghapus semua controller
   void dispose() {
     jumlahProdukc.dispose();
     hargaProdukc.dispose();
@@ -48,6 +51,7 @@ class _AddProductState extends State<AddProduct> {
     super.dispose();
   }
 
+//  membuat Order Baru
   void saveNewOrder() {
     final customer = customerC.text;
     if (namaProdukc == null || jumlahProdukc.text.isEmpty || customer.isEmpty) {
@@ -96,7 +100,7 @@ class _AddProductState extends State<AddProduct> {
             DropdownButtonFormField<String>(
               value: namaProdukc, // Set the dropdown value
               items: [
-                DropdownMenuItem(
+                const DropdownMenuItem(
                   value: null, // Set the first item value to null
                   child: Text("Pilih Produk"),
                 ),

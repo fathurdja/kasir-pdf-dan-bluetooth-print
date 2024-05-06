@@ -7,7 +7,7 @@ import 'package:kasir_app/models/cart.dart';
 // ignore: must_be_immutable
 class Print extends StatefulWidget {
   List<Cart> carts;
-  Print({Key? key, required this.carts}) : super(key: key);
+  Print({super.key, required this.carts});
 
   @override
   _PrintState createState() => _PrintState();
@@ -27,7 +27,7 @@ class _PrintState extends State<Print> {
   }
 
   Future<void> initBluetooth() async {
-    bluetoothPrint.startScan(timeout: Duration(seconds: 4));
+    bluetoothPrint.startScan(timeout: const Duration(seconds: 4));
 
     bool isConnected = await bluetoothPrint.isConnected ?? false;
 
@@ -67,7 +67,7 @@ class _PrintState extends State<Print> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Printer Test"),
+          title: const Text("Printer Test"),
         ),
         body: RefreshIndicator(
             child: SingleChildScrollView(
@@ -78,12 +78,12 @@ class _PrintState extends State<Print> {
                     children: <Widget>[
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                            const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         child: Text(tips),
                       )
                     ],
                   ),
-                  Divider(),
+                  const Divider(),
                   StreamBuilder<List<BluetoothDevice>>(
                     stream: bluetoothPrint.scanResults,
                     initialData: [],
@@ -99,7 +99,7 @@ class _PrintState extends State<Print> {
                               },
                               trailing: _selectedDevice != null &&
                                       _selectedDevice!.address == d.address
-                                  ? Icon(
+                                  ? const Icon(
                                       Icons.check,
                                       color: Colors.green,
                                     )
@@ -107,7 +107,7 @@ class _PrintState extends State<Print> {
                           .toList(),
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -129,10 +129,10 @@ class _PrintState extends State<Print> {
                                     print('please select device');
                                   }
                                 },
-                          child: Text("Connect"))
+                          child: const Text("Connect"))
                     ],
                   ),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                   OutlinedButton(
                       onPressed: _connected
                           ? () async {
@@ -258,7 +258,7 @@ class _PrintState extends State<Print> {
                               await bluetoothPrint.printReceipt(config, list);
                             }
                           : null,
-                      child: Text("Print Struk"))
+                      child: const Text("Print Struk"))
                 ],
               ),
             ),
@@ -269,15 +269,15 @@ class _PrintState extends State<Print> {
             builder: (c, snapshots) {
               if (snapshots.data == true) {
                 return FloatingActionButton(
-                  child: Icon(Icons.stop),
+                  child: const Icon(Icons.stop),
                   onPressed: () => bluetoothPrint.stopScan(),
                   backgroundColor: Colors.red,
                 );
               } else {
                 return FloatingActionButton(
-                    child: Icon(Icons.search),
+                    child: const Icon(Icons.search),
                     onPressed: () => bluetoothPrint.startScan(
-                        timeout: Duration(seconds: 4)));
+                        timeout: const Duration(seconds: 4)));
               }
             }),
       ),

@@ -33,12 +33,12 @@ class _StockpageState extends State<Stockpage> {
                 color: Colors.black,
               ))
         ],
-        title: Text("Laporan Stock"),
+        title: const Text("Laporan Stock"),
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: _data.isEmpty
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: buildDataTable(_data),

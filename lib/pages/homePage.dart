@@ -1,10 +1,12 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:kasir_app/models/cart.dart';
 
 
 class HomePage extends StatelessWidget {
   final List<Cart> _listcart;
-  const HomePage(this._listcart);
+  const HomePage(this._listcart, {super.key});
 
   int get totalItem {
     return _listcart.fold(0, (sum, item) {
