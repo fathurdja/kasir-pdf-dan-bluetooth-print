@@ -21,9 +21,10 @@ Future<Uint8List> makePdf(List<Invoice> invoices) async {
         content.add(pw.Column(children: [
           pw.SizedBox(height: 15),
           pw.Center(child: pw.Text("Kencana Cahaya Amanah")),
-          pw.Center(child: pw.Text("JL. Kenanga No. 12 Gorontalo")),
+          pw.Center(child: pw.Text("JL. Kenangan No. 183 Kel.Dulaluwo Timur")),
+          pw.Center(child: pw.Text("kec. kota tengah kota Gorontalo telp/WA 081244277777"))
         ]));
-
+   // Tambahkan nama pelanggan
         for (var invoice in invoices) {
           content.add(pw.Padding(
               padding: const pw.EdgeInsets.only(left: 10),
@@ -39,7 +40,7 @@ Future<Uint8List> makePdf(List<Invoice> invoices) async {
           break;
         }
 
-        // Tambahkan nama pelanggan
+     
 
         for (var invoice in invoices) {
           double totalInvoice = 0;

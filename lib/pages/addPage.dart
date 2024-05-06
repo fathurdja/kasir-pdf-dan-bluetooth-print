@@ -11,30 +11,34 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
+  List<Map<String, dynamic>> data = [];
+  String noBukti = '';
   Product newProduct = Product(
-    noBukti:
-        '', // Tidak perlu memasukkan NOBUKTI karena akan di-generate otomatis
-    tglpu: DateTime.now().toString(),
-    tyunit: '',
-    barcode: '',
-    jml: 0,
-    harga: 100.0,
-    cmodule: 'RM12',
-    userup: 'adminbrg',
-  );
-  List _data = [];
+      noBukti:
+          '', // Tidak perlu memasukkan NOBUKTI karena akan di-generate otomatis
+      tglpu: DateTime.now().toString(),
+      tyunit: '',
+      barcode: '',
+      jml: 0,
+      harga: 100.0,
+      cmodule: 'RM12',
+      userup: 'adminbrg',
+      tglup: '',
+      kcabang: '001');
+  int qty = 0;
   var db = Mysql();
   final List<String> namaProduk = [
     "Boneva Galon (isi)",
     "Boneva Galon + isi",
     "Boneva Gelas 220ml",
     "Boneva 600 ml",
-    "Boneva 1,5 ml"
+    "Boneva 1.5 ml"
   ];
   String? namaProdukc; // Initialize as nullable
   final jumlahProdukc = TextEditingController();
   final hargaProdukc = TextEditingController();
   final customerC = TextEditingController();
+  
 
   @override
   void dispose() {
@@ -55,18 +59,21 @@ class _AddProductState extends State<AddProduct> {
       return;
     }
     setState(() {
+      qty = jumlahProduk;
       newProduct = Product(
-        noBukti: '', // NoBukti akan di-generate secara otomatis
-        tglpu: DateTime.now().toString(),
-        tyunit: namaProdukc!,
-        barcode: '',
-        jml: jumlahProduk,
-        harga: hargaProduk,
-        cmodule: 'RM12',
-        userup: 'adminbrg',
-      );
+          noBukti: '', // NoBukti akan di-generate secara otomatis
+          tglpu: DateTime.now().toString(),
+          tyunit: namaProdukc!,
+          barcode: '',
+          jml: jumlahProduk,
+          harga: hargaProduk,
+          cmodule: 'RM12',
+          userup: 'adminbrg',
+          tglup: 'adssadsafa',
+          kcabang: "001");
     });
-    widget.addNew(newProduct);
+    widget.addNew(
+        newProduct.tyunit, newProduct.harga, newProduct.jml, customerC.text);
     Navigator.of(context).pop();
   }
 
@@ -118,9 +125,19 @@ class _AddProductState extends State<AddProduct> {
               height: 10,
             ),
             TextButton(
-              onPressed: () async {
+              onPressed: () {
                 saveNewOrder();
-                await addDataDaily(newProduct);
+                db.createOrder(newProduct, qty);
+                addOrderToDataTable({
+                  'NOBUKTI': noBukti,
+                  'tglpu': DateTime.now(),
+                  'tyunit': '$namaProduk',
+                  'barcode': '',
+                  'jml': jumlahProdukc,
+                  'harga': hargaProdukc,
+                  'cmodule': 'RM12',
+                  'userup': 'adminbrg'
+                });
               },
               child: const Text(
                 "add",
@@ -135,21 +152,38 @@ class _AddProductState extends State<AddProduct> {
 
   Future<void> addDataDaily(Product product) async {
     try {
-      List<List<dynamic>> results = await db.getConnection().then((conn) async {
-        String orderNumber = Order.generateOrderNumber();
-        String sql =
-            "INSERT INTO unitpudtl (NOBUKTI, tglpu, tyunit, barcode, jml, harga, cmodule, userup) VALUES ($orderNumber,${product.tglpu},${product.tyunit},${product.barcode},${product.jml},${product.harga},${product.cmodule},${product.userup})";
-        var queryResults = await conn.query(sql);
-        List<List<dynamic>> resultList = queryResults.toList();
-        conn.close();
-        return resultList;
-      });
-
+      MySqlConnection conn = await db.getConnection(); // Menyimpan koneksi
+      String orderNumber = Order.generateOrderNumber();
+      String sql =
+          "INSERT INTO unitpudtl (NOBUKTI, tglpu, tyunit, barcode, jml, harga, cmodule, userup,tglup,kcabang) "
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)"; // Menggunakan placeholder
+      var queryResults = await conn.query(sql, [
+        orderNumber,
+        product.tglpu,
+        product.tyunit,
+        product.barcode,
+        product.jml,
+        product.harga,
+        product.cmodule,
+        product.userup,
+        product.tglup,
+        product.kcabang
+      ]);
+      List<List<dynamic>> resultList = queryResults.toList();
+      await conn.close(); // Menutup koneksi
+      print(resultList);
       setState(() {
-        _data = results;
+        noBukti = orderNumber;
       });
     } catch (error) {
       print('Error adding product: $error');
+      throw error; // Melempar kembali kesalahan untuk penanganan di atas
     }
+  }
+
+  void addOrderToDataTable(Map<String, dynamic> order) {
+    setState(() {
+      data.add(order); // Menambahkan order baru ke dalam data
+    });
   }
 }

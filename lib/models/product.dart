@@ -7,6 +7,8 @@ class Product {
   final double harga;
   final String cmodule;
   final String userup;
+  final String tglup;
+  final String kcabang;
 
   Product({
     required this.noBukti,
@@ -17,6 +19,8 @@ class Product {
     required this.harga,
     required this.cmodule,
     required this.userup,
+    required this.tglup,
+    required this.kcabang
   });
 }
 

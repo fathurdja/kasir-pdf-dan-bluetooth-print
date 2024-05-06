@@ -1,9 +1,7 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
-import 'package:flutter/services.dart';
 import 'package:kasir_app/models/cart.dart';
 
 // ignore: must_be_immutable
@@ -221,6 +219,7 @@ class _PrintState extends State<Print> {
                                       linefeed: 1));
 
                                   totalHarga += cart.harga * cart.qty;
+                                  carts = carts;
                                 }
 
                                 list.add(LineText(
