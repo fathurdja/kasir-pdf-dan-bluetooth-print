@@ -1,4 +1,4 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
@@ -26,48 +26,16 @@ class _PrintState extends State<Print> {
     WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
   }
 
-  Future<void> initBluetooth() async {
-    bluetoothPrint.startScan(timeout: const Duration(seconds: 4));
-
-    bool isConnected = await bluetoothPrint.isConnected ?? false;
-
-    bluetoothPrint.state.listen((state) {
-      print('******************* cur device status: $state');
-
-      switch (state) {
-        case BluetoothPrint.CONNECTED:
-          setState(() {
-            _connected = true;
-            tips = 'connect success';
-          });
-          break;
-        case BluetoothPrint.DISCONNECTED:
-          setState(() {
-            _connected = false;
-            tips = 'disconnect success';
-          });
-          break;
-        default:
-          break;
-      }
-    });
-
-    if (!mounted) return;
-
-    if (isConnected) {
-      setState(() {
-        _connected = true;
-      });
-    }
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
     double total = 0;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Printer Test"),
+          title: const Text("PRINT STRUCK"),
         ),
         body: RefreshIndicator(
             child: SingleChildScrollView(
@@ -77,8 +45,8 @@ class _PrintState extends State<Print> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding:
-                            const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 10),
                         child: Text(tips),
                       )
                     ],
@@ -86,7 +54,7 @@ class _PrintState extends State<Print> {
                   const Divider(),
                   StreamBuilder<List<BluetoothDevice>>(
                     stream: bluetoothPrint.scanResults,
-                    initialData: [],
+                    initialData: const [],
                     builder: (c, snapshots) => Column(
                       children: snapshots.data!
                           .map((d) => ListTile(
@@ -111,7 +79,11 @@ class _PrintState extends State<Print> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      OutlinedButton(
+                      // Tombol koneksi ke bluetooth Printer
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(),
+                              backgroundColor: Color(0xFF3C5B6F)),
                           onPressed: _connected
                               ? null
                               : () async {
@@ -129,11 +101,18 @@ class _PrintState extends State<Print> {
                                     print('please select device');
                                   }
                                 },
-                          child: const Text("Connect"))
+                          child: const Text(
+                            "Connect",
+                            style: TextStyle(color: Colors.white),
+                          ))
                     ],
                   ),
                   const SizedBox(width: 10.0),
-                  OutlinedButton(
+                  // tombol Print Struk dan Pengaturan halaman Struk
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(),
+                          backgroundColor: Color(0xFF3C5B6F)),
                       onPressed: _connected
                           ? () async {
                               Map<String, dynamic> config = Map();
@@ -258,7 +237,7 @@ class _PrintState extends State<Print> {
                               await bluetoothPrint.printReceipt(config, list);
                             }
                           : null,
-                      child: const Text("Print Struk"))
+                      child: Text("Print Struk")),
                 ],
               ),
             ),
@@ -274,6 +253,7 @@ class _PrintState extends State<Print> {
                   backgroundColor: Colors.red,
                 );
               } else {
+                // Fungsi Mencari Device 
                 return FloatingActionButton(
                     child: const Icon(Icons.search),
                     onPressed: () => bluetoothPrint.startScan(
@@ -282,5 +262,40 @@ class _PrintState extends State<Print> {
             }),
       ),
     );
+  }
+  // fungsi init bluetooth 
+   Future<void> initBluetooth() async {
+    bluetoothPrint.startScan(timeout: const Duration(seconds: 4));
+
+    bool isConnected = await bluetoothPrint.isConnected ?? false;
+
+    bluetoothPrint.state.listen((state) {
+      print('******************* cur device status: $state');
+
+      switch (state) {
+        case BluetoothPrint.CONNECTED:
+          setState(() {
+            _connected = true;
+            tips = 'connect success';
+          });
+          break;
+        case BluetoothPrint.DISCONNECTED:
+          setState(() {
+            _connected = false;
+            tips = 'disconnect success';
+          });
+          break;
+        default:
+          break;
+      }
+    });
+
+    if (!mounted) return;
+
+    if (isConnected) {
+      setState(() {
+        _connected = true;
+      });
+    }
   }
 }

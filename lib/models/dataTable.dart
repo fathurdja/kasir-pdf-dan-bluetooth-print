@@ -1,37 +1,35 @@
 import 'package:flutter/material.dart';
 
-Widget buildDataTable(List<Map<String, dynamic>> data) {
+Widget buildDataTable(List<List<dynamic>> data) {
+  // Asumsikan baris pertama dari data berisi header
+  final List headers = data.removeAt(0);
+
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: DataTable(
-      columns: const [
-        DataColumn(label: Text('NOBUKTI')),
-        DataColumn(label: Text('tglpu')),
-        DataColumn(label: Text('tyunit')),
-        DataColumn(label: Text('barcode')),
-        DataColumn(label: Text('jml')),
-        DataColumn(label: Text('harga')),
-        DataColumn(label: Text('cmodule')),
-        DataColumn(label: Text('userup')),
-      ],
-      rows: data
-          .map(
-            (row) => DataRow(
-              cells: [
-                DataCell(Text(row['NOBUKTI'].toString())),
-                DataCell(Text(row['tglpu'].toString())),
-                DataCell(Text(row['tyunit'].toString())),
-                DataCell(Text(row['barcode'].toString())),
-                DataCell(Text(row['jml'].toString())),
-                DataCell(Text(row['harga'].toString() == 'NULL'
-                    ? '0.00'
-                    : row['harga'].toString())),
-                DataCell(Text(row['cmodule'].toString())),
-                DataCell(Text(row['userup'].toString())),
-              ],
-            ),
-          )
-          .toList(),
+      columns:
+          headers.map((header) => DataColumn(label: Text(header))).toList(),
+      rows: data.map(
+        (row) {
+          // Pengecekan jumlah elemen dalam baris
+          if (row.length != headers.length) {
+            throw RangeError(
+                'Invalid value: Expected ${headers.length} elements, but got ${row.length} elements in row: $row');
+          }
+
+          return DataRow(
+            cells: row.asMap().entries.map((entry) {
+              int idx = entry.key;
+              dynamic value = entry.value;
+              // Konversi kolom harga jika diperlukan
+              if (headers[idx] == 'harga' && value.toString() == 'NULL') {
+                value = '0.00';
+              }
+              return DataCell(Text(value.toString()));
+            }).toList(),
+          );
+        },
+      ).toList(),
     ),
   );
 }
