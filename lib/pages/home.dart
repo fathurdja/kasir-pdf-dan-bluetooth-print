@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:android_path_provider/android_path_provider.dart';
 import 'package:csv/csv.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:kasir_app/pages/Product_page.dart';
 import 'package:kasir_app/models/product.dart';
 import 'package:kasir_app/pages/addPage.dart';
+import 'package:kasir_app/pages/beranda.dart';
 import 'package:kasir_app/pages/dailyReport.dart';
 import 'package:kasir_app/pages/homePage.dart';
 import 'package:kasir_app/pages/invoice_page.dart';
@@ -102,6 +102,15 @@ class _HomeState extends State<Home> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              ListTile(
+                leading: const Icon(Icons.home_filled),
+                title: const Text("Home"),
+                trailing: const Icon(Icons.arrow_right_sharp),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => FirstPage()));
+                },
+              ),
               ListTile(
                 leading: const Icon(Icons.stacked_bar_chart),
                 title: const Text("Laporan Harian"),

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kasir_app/pages/home.dart';
+import 'package:kasir_app/pages/beranda.dart';
 
 class WellcomePage extends StatelessWidget {
   const WellcomePage({super.key});
@@ -88,7 +88,8 @@ class WellcomePage extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Home(),
+                              // builder: (context) => const Home(),
+                              builder: (context) => FirstPage(),
                             ),
                           );
                         },
