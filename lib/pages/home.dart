@@ -102,15 +102,15 @@ class _HomeState extends State<Home> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ListTile(
-                leading: const Icon(Icons.home_filled),
-                title: const Text("Home"),
-                trailing: const Icon(Icons.arrow_right_sharp),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => FirstPage()));
-                },
-              ),
+              // ListTile(
+              //   leading: const Icon(Icons.home_filled),
+              //   title: const Text("Home"),
+              //   trailing: const Icon(Icons.arrow_right_sharp),
+              //   onTap: () {
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (context) => FirstPage()));
+              //   },
+              // ),
               ListTile(
                 leading: const Icon(Icons.stacked_bar_chart),
                 title: const Text("Laporan Harian"),

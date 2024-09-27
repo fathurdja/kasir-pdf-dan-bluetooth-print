@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:kasir_app/models/cart.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class Print extends StatefulWidget {
   List<Cart> carts;
+
   Print({super.key, required this.carts});
 
   @override
@@ -14,19 +17,18 @@ class Print extends StatefulWidget {
 }
 
 class _PrintState extends State<Print> {
+  late DateFormat formatter;
   BluetoothPrint bluetoothPrint = BluetoothPrint.instance;
   BluetoothDevice? _selectedDevice;
   String tips = 'no device connect';
   bool _connected = false;
+  final now = DateTime.now();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => initBluetooth());
+    WidgetsBinding.instance.addPostFrameCallback((_) => initAll());
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -117,8 +119,8 @@ class _PrintState extends State<Print> {
                           ? () async {
                               Map<String, dynamic> config = Map();
                               config['width'] = 40; // 标签宽度，单位mm
-                              config['height'] = 70; // 标签高度，单位mm
-                              config['gap'] = 2; // 标签间隔，单位mm
+                              config['height'] = 70;
+                              config['gap'] = 2;
 
                               List<LineText> list = [];
                               list.add(LineText(
@@ -155,9 +157,12 @@ class _PrintState extends State<Print> {
                                   type: LineText.TYPE_TEXT,
                                   content: 'Telp/WA 081244277777',
                                   align: LineText.ALIGN_CENTER,
+                                  linefeed: 1));
 
-                                  // absolutePos: 350,
-                                  // relativePos: 0,
+                              list.add(LineText(
+                                  type: LineText.TYPE_TEXT,
+                                  content: formatter.format(now),
+                                  align: LineText.ALIGN_CENTER,
                                   linefeed: 1));
                               list.add(LineText(
                                   type: LineText.TYPE_TEXT,
@@ -210,7 +215,7 @@ class _PrintState extends State<Print> {
                                     // relativePos: 0,
                                     linefeed: 1));
 
-                                total += totalHarga;
+                                total = totalHarga;
 
                                 break;
                               }
@@ -231,6 +236,8 @@ class _PrintState extends State<Print> {
                                   // absolutePos: 0,
                                   // relativePos: 0,
                                   linefeed: 1));
+                              print([total]);
+                              print(formatter.format(now));
 
                               list.add(LineText(linefeed: 1));
 
@@ -253,7 +260,7 @@ class _PrintState extends State<Print> {
                   backgroundColor: Colors.red,
                 );
               } else {
-                // Fungsi Mencari Device 
+                // Fungsi Mencari Device
                 return FloatingActionButton(
                     child: const Icon(Icons.search),
                     onPressed: () => bluetoothPrint.startScan(
@@ -263,8 +270,9 @@ class _PrintState extends State<Print> {
       ),
     );
   }
-  // fungsi init bluetooth 
-   Future<void> initBluetooth() async {
+
+  // fungsi init bluetooth
+  Future<void> initBluetooth() async {
     bluetoothPrint.startScan(timeout: const Duration(seconds: 4));
 
     bool isConnected = await bluetoothPrint.isConnected ?? false;
@@ -297,5 +305,11 @@ class _PrintState extends State<Print> {
         _connected = true;
       });
     }
+  }
+
+  Future<void> initAll() async {
+    await initializeDateFormatting('id_ID', null);
+    formatter = DateFormat('EEEE, dd MMMM yyyy HH:mm', 'id_ID');
+    await initBluetooth();
   }
 }

@@ -1,19 +1,21 @@
 import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:kasir_app/models/invoice.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart'; // Import paket intl untuk formatting angka
 
 Future<Uint8List> makePdf(List<Invoice> invoices) async {
+  String? _logo;
   final pdf = pw.Document();
   double total = 0;
-
+  _logo = await rootBundle.loadString('assets/images/logo.svg');
   // final double page = 75 * 66 * 12;
 
   pdf.addPage(
     pw.MultiPage(
-      pageFormat: const PdfPageFormat(190, 500),
+      pageFormat: PdfPageFormat.standard,
       build: (
         pw.Context context,
       ) {
@@ -22,14 +24,16 @@ Future<Uint8List> makePdf(List<Invoice> invoices) async {
           pw.SizedBox(height: 15),
           pw.Center(child: pw.Text("Kencana Cahaya Amanah")),
           pw.Center(child: pw.Text("JL. Kenangan No. 183 Kel.Dulaluwo Timur")),
-          pw.Center(child: pw.Text("kec. kota tengah kota Gorontalo telp/WA 081244277777"))
+          pw.Center(
+              child: pw.Text(
+                  "kec. kota tengah kota Gorontalo telp/WA 081244277777"))
         ]));
-   // Tambahkan nama pelanggan
+        // Tambahkan nama pelanggan
         for (var invoice in invoices) {
           content.add(pw.Padding(
               padding: const pw.EdgeInsets.only(left: 10),
               child: pw.Column(children: [
-                pw.SizedBox(height: 15),
+                pw.SizedBox(height: 20),
                 pw.Text(
                   'Pelanggan: ${invoice.customer}',
                   style: pw.TextStyle(
@@ -40,15 +44,14 @@ Future<Uint8List> makePdf(List<Invoice> invoices) async {
           break;
         }
 
-     
-
         for (var invoice in invoices) {
           double totalInvoice = 0;
           for (var item in invoice.items) {
             // Menambahkan item-item pembelian
             content.add(
               pw.Padding(
-                  padding: const pw.EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                  padding: const pw.EdgeInsets.symmetric(
+                      vertical: 5, horizontal: 20),
                   child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
@@ -75,7 +78,7 @@ Future<Uint8List> makePdf(List<Invoice> invoices) async {
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('Total :'),
+                  pw.Text('SubTotal :'),
                   pw.Text(
                       '${NumberFormat.currency(locale: 'id', symbol: 'Rp.').format(totalInvoice)}', // Mengubah format total invoice menjadi uang rupiah
                       style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -105,6 +108,15 @@ Future<Uint8List> makePdf(List<Invoice> invoices) async {
             )));
         content.add(pw.Divider());
 
+        content.add(pw.Column(mainAxisSize: pw.MainAxisSize.min, children: [
+          pw.SizedBox(height: 10),
+          pw.Container(
+            alignment: pw.Alignment.topRight,
+            padding: const pw.EdgeInsets.only(bottom: 8, left: 30),
+            height: 72,
+            child: _logo != null ? pw.SvgImage(svg: _logo) : pw.PdfLogo(),
+          ),
+        ]));
         // Mengembalikan list dari list widget, sesuai dengan struktur yang diperlukan oleh MultiPage
         return content;
       },
