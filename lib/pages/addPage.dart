@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kasir_app/models/mysql.dart';
 import 'package:kasir_app/models/product.dart';
 import 'package:kasir_app/models/stock.dart';
-import 'package:mysql1/mysql1.dart';
+
 
 class AddProduct extends StatefulWidget {
   AddProduct({required this.addNew, required this.stockList});
