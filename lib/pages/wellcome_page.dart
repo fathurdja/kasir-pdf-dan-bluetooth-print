@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:kasir_app/pages/home.dart';
 
 class WellcomePage extends StatelessWidget {
   const WellcomePage({super.key});
@@ -85,15 +84,15 @@ class WellcomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 50),
                       GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Home(),
-                              // builder: (context) => FirstPage(),
-                            ),
-                          );
-                        },
+                        // onTap: () {
+                        //   Navigator.pushReplacement(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) => const Home(),
+                        //       // builder: (context) => FirstPage(),
+                        //     ),
+                        //   );
+                        // },
                         child: Container(
                           padding: const EdgeInsets.only(left: 15),
                           height: 50,

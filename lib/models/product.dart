@@ -22,6 +22,8 @@ class Product {
     required this.tglup,
     required this.kcabang
   });
+
+  
 }
 
 class Order {

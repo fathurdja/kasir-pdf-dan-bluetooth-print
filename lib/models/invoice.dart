@@ -14,4 +14,5 @@ class LineItem {
   final String namaProduk;
   final double harga;
   LineItem(this.qty, this.namaProduk, this.harga);
+
 }

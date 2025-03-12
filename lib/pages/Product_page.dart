@@ -43,7 +43,9 @@ class ProductPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                "Orders(" + carts[index].namaProduk + ")",
+                                "" +
+                                    carts[index].namaProduk.substring(0, 20) +
+                                    "",
                                 style: const TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
